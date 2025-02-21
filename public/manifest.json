@@ -1,0 +1,29 @@
+{
+  "short_name": "LIMITLESS",
+  "name": "LIMITLESS - Live Limitlessly With God",
+  "description": "A transformative 2-day virtual event with Graham Cooke and Dionne van Zyl",
+  "icons": [
+    {
+      "src": "Brilliant_ICON_Full-Color 2.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "Brilliant_ICON_Full-Color 2.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "Brilliant_ICON_Full-Color 2.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "orientation": "portrait",
+  "categories": ["events", "spirituality", "education"],
+  "lang": "en-US"
+}
