@@ -5,7 +5,14 @@ interface Contact {
   firstName: string;
 }
 
+// Get webhook URL from environment variables
 const WEBHOOK_URL = process.env.REACT_APP_ZAPIER_WEBHOOK_URL;
+
+// Debug logging
+console.log('Environment variables:', {
+  WEBHOOK_URL,
+  RAW_ENV: process.env.REACT_APP_ZAPIER_WEBHOOK_URL
+});
 
 interface WebhookResponse {
   attempt: string;
@@ -16,7 +23,11 @@ interface WebhookResponse {
 
 export const registerContact = async (contact: Contact) => {
   if (!WEBHOOK_URL) {
-    throw new Error('Webhook URL not configured');
+    console.error('Webhook URL missing:', {
+      envVar: process.env.REACT_APP_ZAPIER_WEBHOOK_URL,
+      WEBHOOK_URL
+    });
+    throw new Error('REACT_APP_ZAPIER_WEBHOOK_URL is not configured in environment variables. Please check your .env file.');
   }
 
   const url = `${WEBHOOK_URL}?email=${encodeURIComponent(contact.email)}&name=${encodeURIComponent(contact.firstName)}`;

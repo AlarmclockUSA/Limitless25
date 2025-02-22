@@ -20,7 +20,7 @@ const SalesLetter: React.FC = () => {
             There's a profound shift happening in how believers experience God...
           </h2>
           <p className="text-2xl md:text-3xl font-bold mb-6">
-            And it's built on one revolutionary truth:
+            And it's built on one timeless truth:
           </p>
           <p className="text-xl md:text-2xl text-summit-gray-200 italic">
             In Christ, there's nothing standing between you and an extraordinary relationship with God.

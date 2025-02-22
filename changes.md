@@ -418,18 +418,15 @@
    - Smoother animation transitions
    - Proper cleanup of modal state
 
-## Registration Flow Improvement - [Current Date]
-1. Updated RegisterModal component:
-   - Removed delayed navigation after registration
-   - Eliminated modal closing animation before navigation
-   - Implemented direct navigation to thank you page
-   - Maintained success state for visual feedback
-   - Improved error handling with loading state reset
-2. Enhanced user experience:
-   - Eliminated perceived delay between registration and confirmation
-   - Reduced chance of navigation appearing as an error
-   - Maintained form validation and error messaging
-   - Preserved existing success animation for feedback
+## Registration Flow Enhancement - [Current Date]
+1. Fixed registration webhook to handle both free and paid registrations:
+   - Added isAllAccess flag to distinguish between free event and All Access Pass registrations
+   - Updated RegisterModal to handle free event registrations
+   - Updated AllAccess page to handle paid registrations with Stripe integration
+2. Improved user experience:
+   - Clearer separation between free event registration and paid All Access Pass
+   - Proper error handling for both registration types
+   - Maintained existing styling and animations
 
 ## Purchase Details Enhancement - [Current Date]
 1. Updated RegisterModal component:
@@ -521,5 +518,39 @@
    - Created .env.example template
    - Updated registration service to use environment variables
 3. Added error handling for missing webhook URL
+
+## Content Update - [Current Date]
+1. Updated SalesLetter component wording:
+   - Changed "revolutionary truth" to "timeless truth"
+   - Maintained existing styling and animations
+
+## Stripe Integration Simplification - [Current Date]
+1. Simplified Stripe integration to use Stripe Checkout:
+   - Removed custom Elements implementation
+   - Added redirectToCheckout function for direct Stripe Checkout
+   - Simplified payment flow with hosted checkout page
+   - Maintained existing styling for CTA button
+2. Enhanced error handling:
+   - Added loading state during checkout redirect
+   - Improved error messaging
+   - Added proper TypeScript types
+3. Improved user experience:
+   - Streamlined checkout process
+   - Reduced code complexity
+   - Enhanced security with Stripe-hosted checkout
+   - Maintained mobile responsiveness
+
+## Stripe Integration Security Enhancement - [Date]
+1. Added Stripe price ID to environment variables for improved security
+2. Updated ThankYou page to use environment variable for price ID
+3. Added error handling for missing price ID configuration
+4. Updated example environment variables to include price ID
+
+## Paid Registration Webhook Integration - [Date]
+1. Added webhook integration for paid registrations
+2. Added paid registration webhook URL to environment variables
+3. Updated ThankYou component to send registration data to webhook
+4. Added error handling for webhook failures
+5. Added source tracking for registration origin
 
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 

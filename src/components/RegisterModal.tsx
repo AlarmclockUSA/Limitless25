@@ -53,7 +53,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
       try {
         const result = await registerContact({
           email: email.trim(),
-          firstName: name.trim(),
+          firstName: name.trim()
         });
 
         if (!result.success) {
@@ -66,8 +66,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
         // Show success state
         setIsSuccess(true);
         
-        // Navigate directly to thank you page with purchase details
-        navigate(`/thank-you?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}&product=all-access-pass&price=49&description=${encodeURIComponent("Lifetime Access + Digital Book")}`);
+        // Navigate to thank you page
+        navigate(`/thank-you?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}`);
       } catch (error) {
         console.error('Registration error:', error);
         setErrors(prev => ({ 

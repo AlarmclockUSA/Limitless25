@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import * as FramerMotion from 'framer-motion';
 
 interface CalendarEvent {
   title: string;
@@ -103,111 +102,87 @@ const AddToCalendar: React.FC<AddToCalendarProps> = ({ event }) => {
         </svg>
       </motion.button>
 
-      {FramerMotion.AnimatePresence({
-        children: isOpen ? (
-          <motion.div
-            key="dropdown"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 mt-2 w-72 bg-[#2A2A2A] rounded-xl border border-white/[0.08] shadow-xl overflow-hidden z-50"
-          >
-            <div className="p-3">
-              <div className="text-sm text-white/70 mb-2 px-2">
-                Choose your calendar app:
-              </div>
-              
-              <div className="space-y-1">
-                {/* Google Calendar */}
-                <button
-                  onClick={() => {
-                    window.open(getGoogleCalendarUrl(), '_blank');
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 22c-5.5 0-10-4.5-10-10S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
-                      <path d="M17 11h-4V7c0-.6-.4-1-1-1s-1 .4-1 1v4H7c-.6 0-1 .4-1 1s.4 1 1 1h4v4c0 .6.4 1 1 1s1-.4 1-1v-4h4c.6 0 1-.4 1-1s-.4-1-1-1z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium">Google Calendar</div>
-                    <div className="text-xs text-white/60">Best for Gmail users</div>
-                  </div>
-                </button>
-
-                {/* Outlook */}
-                <button
-                  onClick={() => {
-                    window.open(getOutlookOnlineUrl(), '_blank');
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7.88 12.04c0 .45-.11.87-.33 1.27-.22.39-.53.71-.92.94-.4.23-.85.34-1.35.34-.46 0-.87-.11-1.23-.32-.36-.21-.64-.5-.84-.85-.2-.35-.3-.75-.3-1.19 0-.46.1-.87.31-1.23.21-.36.5-.65.87-.87.37-.22.79-.33 1.27-.33.42 0 .79.09 1.12.27.33.18.59.42.78.72.19.3.28.63.28 1 0 .32-.08.62-.23.9-.15.28-.37.51-.66.69-.29.18-.63.27-1.02.27-.22 0-.43-.05-.62-.15-.19-.1-.34-.25-.44-.44-.1-.19-.15-.4-.15-.63 0-.24.05-.45.16-.64.11-.19.27-.34.48-.44.21-.1.45-.15.71-.15.23 0 .44.05.63.15.19.1.34.24.44.43.1.19.15.41.15.66 0 .31-.07.56-.22.77-.15.21-.34.37-.59.48-.25.11-.52.17-.83.17-.37 0-.69-.13-.96-.38-.27-.25-.4-.59-.4-1.02 0-.43.13-.77.38-1.02.25-.25.57-.37.96-.37.34 0 .64.09.91.27.27.18.47.42.62.72.15.3.22.63.22 1zm9.12 0c0 .45-.11.87-.33 1.27-.22.39-.53.71-.92.94-.4.23-.85.34-1.35.34-.46 0-.87-.11-1.23-.32-.36-.21-.64-.5-.84-.85-.2-.35-.3-.75-.3-1.19 0-.46.1-.87.31-1.23.21-.36.5-.65.87-.87.37-.22.79-.33 1.27-.33.42 0 .79.09 1.12.27.33.18.59.42.78.72.19.3.28.63.28 1 0 .32-.08.62-.23.9-.15.28-.37.51-.66.69-.29.18-.63.27-1.02.27-.22 0-.43-.05-.62-.15-.19-.1-.34-.25-.44-.44-.1-.19-.15-.4-.15-.63 0-.24.05-.45.16-.64.11-.19.27-.34.48-.44.21-.1.45-.15.71-.15.23 0 .44.05.63.15.19.1.34.24.44.43.1.19.15.41.15.66 0 .31-.07.56-.22.77-.15.21-.34.37-.59.48-.25.11-.52.17-.83.17-.37 0-.69-.13-.96-.38-.27-.25-.4-.59-.4-1.02 0-.43.13-.77.38-1.02.25-.25.57-.37.96-.37.34 0 .64.09.91.27.27.18.47.42.62.72.15.3.22.63.22 1z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium">Outlook</div>
-                    <div className="text-xs text-white/60">For Microsoft users</div>
-                  </div>
-                </button>
-
-                {/* Apple Calendar */}
-                <button
-                  onClick={() => {
-                    window.open(getiCalUrl(), '_blank');
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium">Apple Calendar</div>
-                    <div className="text-xs text-white/60">For iPhone & Mac users</div>
-                  </div>
-                </button>
-
-                {/* Other Calendar Apps */}
-                <button
-                  onClick={() => {
-                    downloadICS();
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium">Other Calendar Apps</div>
-                    <div className="text-xs text-white/60">Download .ics file</div>
-                  </div>
-                </button>
-              </div>
-
-              <div className="mt-3 px-2 py-2 bg-white/5 rounded-lg">
-                <div className="text-xs text-white/60">
-                  💡 Tip: Choose the option that matches your default calendar app for the best experience
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          className="absolute top-full left-0 mt-2 w-72 bg-[#2A2A2A] rounded-xl border border-white/[0.08] shadow-xl overflow-hidden z-50"
+        >
+          <div className="p-3">
+            <div className="text-sm text-white/70 mb-2 px-2">
+              Choose your calendar app:
+            </div>
+            
+            <div className="space-y-1">
+              {/* Google Calendar */}
+              <button
+                onClick={() => {
+                  window.open(getGoogleCalendarUrl(), '_blank');
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 22c-5.5 0-10-4.5-10-10S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
+                    <path d="M17 11h-4V7c0-.6-.4-1-1-1s-1 .4-1 1v4H7c-.6 0-1 .4-1 1s.4 1 1 1h4v4c0 .6.4 1 1 1s1-.4 1-1v-4h4c.6 0 1-.4 1-1s-.4-1-1-1z"/>
+                  </svg>
                 </div>
+                <div>
+                  <div className="font-medium">Google Calendar</div>
+                  <div className="text-xs text-white/60">Best for Gmail users</div>
+                </div>
+              </button>
+
+              {/* Apple Calendar */}
+              <button
+                onClick={() => {
+                  window.open(getiCalUrl(), '_blank');
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div className="font-medium">Apple Calendar</div>
+                  <div className="text-xs text-white/60">For iPhone & Mac users</div>
+                </div>
+              </button>
+
+              {/* Other Calendar Apps */}
+              <button
+                onClick={() => {
+                  downloadICS();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-white/90 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div className="font-medium">Other Calendar Apps</div>
+                  <div className="text-xs text-white/60">Download .ics file</div>
+                </div>
+              </button>
+            </div>
+
+            <div className="mt-3 px-2 py-2 bg-white/5 rounded-lg">
+              <div className="text-xs text-white/60">
+                💡 Tip: Choose the option that matches your default calendar app for the best experience
               </div>
             </div>
-          </motion.div>
-        ) : null,
-        initial: false,
-        mode: "wait"
-      })}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 };

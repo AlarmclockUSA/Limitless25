@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
+import { getStripe, createPaymentIntent } from '../services/stripe';
+import { registerContact } from '../services/registration';
+import PaymentForm from '../components/PaymentForm';
 
 const AllAccess: React.FC = () => {
   const navigate = useNavigate();
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [cardDetails, setCardDetails] = useState({
     name: '',
     email: '',
   });
+
+  useEffect(() => {
+    const initializePayment = async () => {
+      try {
+        const { clientSecret } = await createPaymentIntent(49);
+        setClientSecret(clientSecret);
+      } catch (err) {
+        setError('Failed to initialize payment. Please try again later.');
+        console.error('Payment initialization error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializePayment();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -17,9 +40,64 @@ const AllAccess: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Stripe integration will go here
+  const handlePaymentSuccess = async (paymentIntent: any) => {
+    try {
+      // Register the contact first with isAllAccess flag
+      await registerContact({
+        email: cardDetails.email.trim(),
+        firstName: cardDetails.name.trim()
+      });
+      
+      // Navigate to final thank you page with purchase details
+      navigate(`/final-thank-you?product=all-access-pass&price=49&description=${encodeURIComponent("Lifetime Access + Digital Book")}`);
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('Failed to complete registration. Please contact support.');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#111111] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-white/70">Initializing payment...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#111111] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-500/10 text-red-500 p-4 rounded-lg mb-4">
+            {error}
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-white/70 hover:text-white transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const options = {
+    clientSecret,
+    appearance: {
+      theme: 'night',
+      variables: {
+        colorPrimary: '#FFB347',
+        colorBackground: '#2A2A2A',
+        colorText: '#FFFFFF',
+        colorDanger: '#ef4444',
+        fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+        borderRadius: '8px',
+      },
+    },
   };
 
   return (
@@ -115,7 +193,7 @@ const AllAccess: React.FC = () => {
               Complete Purchase
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-white/90 mb-2">
                   Name
@@ -127,6 +205,7 @@ const AllAccess: React.FC = () => {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 rounded-lg bg-[#2A2A2A] border border-white/[0.08] text-white placeholder-white/40 focus:outline-none focus:border-[#FFB347]"
                   placeholder="Enter your name"
+                  required
                 />
               </div>
 
@@ -141,40 +220,18 @@ const AllAccess: React.FC = () => {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 rounded-lg bg-[#2A2A2A] border border-white/[0.08] text-white placeholder-white/40 focus:outline-none focus:border-[#FFB347]"
                   placeholder="Enter your email"
+                  required
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
-                  Card Details
-                </label>
-                <div className="w-full px-4 py-3 rounded-lg bg-[#2A2A2A] border border-white/[0.08] text-white/40">
-                  Stripe Element will go here
-                </div>
-              </div>
-
-              <div className="border-t border-white/[0.08] pt-6">
-                <div className="flex justify-between mb-2">
-                  <span className="text-white/70">All Access Pass</span>
-                  <span className="text-white">$49.00</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  <span className="text-white">Total</span>
-                  <span className="text-white">$49.00</span>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#FF6B6B] to-[#FFB347] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-200 border border-white/20 hover:opacity-90"
-              >
-                Complete Purchase
-              </button>
-
-              <p className="text-center text-white/40 text-sm">
-                Your card will be charged $49.00
-              </p>
-            </form>
+              {clientSecret && (
+                <PaymentForm
+                  onSuccess={handlePaymentSuccess}
+                  amount={49}
+                  productName="All Access Pass"
+                />
+              )}
+            </div>
 
             <div className="flex items-center justify-center gap-8 mt-6">
               <div className="flex items-center gap-2">
