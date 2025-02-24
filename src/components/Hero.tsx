@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ModalContext } from '../App';
 
 const Hero: React.FC = () => {
   const { openModal } = useContext(ModalContext);
+  const [imageLoading, setImageLoading] = useState(true);
 
   return (
     <header className="relative min-h-[70vh] bg-summit-black text-summit-white pt-6">
@@ -127,8 +128,28 @@ const Hero: React.FC = () => {
         <img 
           src="/images/speaker-spread.png" 
           alt="Event Speakers"
-          className="w-full h-auto rounded-2xl shadow-2xl"
+          className="w-full h-auto max-h-[500px] object-contain rounded-2xl shadow-2xl"
+          onLoad={() => {
+            console.log('Speaker spread image loaded successfully');
+            setImageLoading(false);
+          }}
+          onError={(e) => {
+            console.error('Error loading speaker spread image:', e);
+            console.log('Attempted image path:', '/images/speaker-spread.png');
+            // Try the fallback path
+            const imgElement = e.target as HTMLImageElement;
+            if (imgElement.src.includes('/images/')) {
+              console.log('Trying fallback path...');
+              imgElement.src = '/speaker-spread.png';
+            }
+            setImageLoading(false);
+          }}
         />
+        {imageLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-summit-black/20 rounded-2xl">
+            <div className="text-summit-white">Loading image...</div>
+          </div>
+        )}
       </motion.div>
 
       {/* Decorative bottom fade */}
