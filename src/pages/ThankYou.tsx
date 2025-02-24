@@ -26,40 +26,11 @@ const ThankYou: React.FC = () => {
   const handleCheckout = async () => {
     setIsLoading(true);
     setError(null);
-    
     try {
-      const priceId = process.env.REACT_APP_STRIPE_PRICE_ID;
-      if (!priceId) {
-        throw new Error('Stripe price ID is not configured');
-      }
-
-      // Send webhook for paid registration
-      try {
-        const webhookUrl = process.env.REACT_APP_PAID_REGISTRATION_WEBHOOK_URL;
-        if (!webhookUrl) {
-          throw new Error('Paid registration webhook URL is not configured');
-        }
-
-        await fetch(webhookUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: JSON.stringify({
-            email,
-            name,
-            isPaid: true,
-            amount: 49,
-            source: 'stripe_checkout'
-          })
-        });
-      } catch (webhookError) {
-        console.error('Webhook error:', webhookError);
-        // Continue with checkout even if webhook fails
-      }
-
-      await redirectToCheckout(priceId);
-    } catch (error) {
-      console.error('Checkout error:', error);
-      setError('Failed to initiate checkout. Please try again.');
+      await redirectToCheckout();
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Unable to proceed to checkout. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +123,7 @@ const ThankYou: React.FC = () => {
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-b from-white to-white/90 bg-clip-text text-transparent leading-[1.2]">
-              Enhance Your Experience
+              Get Event Recordings
             </h2>
 
             <p className="text-lg text-white/70 mb-8">
@@ -187,7 +158,7 @@ const ThankYou: React.FC = () => {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <h3 className="font-medium bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">Digital Book</h3>
+                  <h3 className="font-medium bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">BONUS: E-book</h3>
                   <p className="text-white/70">Graham's "The Nature of Freedom" (Value: $24.99)</p>
                 </div>
               </div>

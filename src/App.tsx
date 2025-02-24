@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import ThankYou from './pages/ThankYou';
 import FinalThankYou from './pages/FinalThankYou';
 import AllAccess from './pages/AllAccess';
+import AllAccessThankYou from './pages/AllAccessThankYou';
 import RegisterModal from './components/RegisterModal';
 import './App.css';
 
@@ -28,7 +29,8 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = async (data: { name: string; email: string }) => {
-    setIsModalOpen(false);
+    // The modal will be closed by the RegisterModal component after showing success state
+    return true;
   };
 
   const modalContextValue = {
@@ -45,6 +47,7 @@ function App() {
               <Route path="/thank-you" element={<ThankYou />} />
               <Route path="/final-thank-you" element={<FinalThankYou />} />
               <Route path="/all-access" element={<AllAccess />} />
+              <Route path="/all-access/thank-you" element={<AllAccessThankYou />} />
             </Routes>
             
             <RegisterModal

@@ -1,36 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useStripe, useElements } from '@stripe/react-stripe-js';
-import { getStripe, createPaymentIntent } from '../services/stripe';
+import { redirectToCheckout } from '../services/stripe';
 import { registerContact } from '../services/registration';
-import PaymentForm from '../components/PaymentForm';
 
 const AllAccess: React.FC = () => {
   const navigate = useNavigate();
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cardDetails, setCardDetails] = useState({
     name: '',
     email: '',
   });
-
-  useEffect(() => {
-    const initializePayment = async () => {
-      try {
-        const { clientSecret } = await createPaymentIntent(49);
-        setClientSecret(clientSecret);
-      } catch (err) {
-        setError('Failed to initialize payment. Please try again later.');
-        console.error('Payment initialization error:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializePayment();
-  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,64 +21,25 @@ const AllAccess: React.FC = () => {
     }));
   };
 
-  const handlePaymentSuccess = async (paymentIntent: any) => {
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      // Register the contact first with isAllAccess flag
+      // Register the contact first with separate name and email parameters
       await registerContact({
+        firstName: cardDetails.name.trim(),
         email: cardDetails.email.trim(),
-        firstName: cardDetails.name.trim()
+        isPaidRegistration: true // Add this flag to indicate it's a paid registration
       });
       
-      // Navigate to final thank you page with purchase details
-      navigate(`/final-thank-you?product=all-access-pass&price=49&description=${encodeURIComponent("Lifetime Access + Digital Book")}`);
-    } catch (error) {
-      console.error('Registration error:', error);
-      setError('Failed to complete registration. Please contact support.');
+      // Redirect to Stripe Checkout
+      await redirectToCheckout();
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError('Unable to proceed to checkout. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#111111] text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-white/70">Initializing payment...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#111111] text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="bg-red-500/10 text-red-500 p-4 rounded-lg mb-4">
-            {error}
-          </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="text-white/70 hover:text-white transition-colors"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const options = {
-    clientSecret,
-    appearance: {
-      theme: 'night',
-      variables: {
-        colorPrimary: '#FFB347',
-        colorBackground: '#2A2A2A',
-        colorText: '#FFFFFF',
-        colorDanger: '#ef4444',
-        fontFamily: 'ui-sans-serif, system-ui, sans-serif',
-        borderRadius: '8px',
-      },
-    },
   };
 
   return (
@@ -132,7 +74,7 @@ const AllAccess: React.FC = () => {
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-b from-white to-white/90 bg-clip-text text-transparent leading-[1.2]">
-              LIMITLESS All Access Pass
+              Get Event Recordings
             </h1>
 
             <div className="flex items-baseline justify-center gap-4 mb-8">
@@ -163,20 +105,8 @@ const AllAccess: React.FC = () => {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <h3 className="font-medium bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">Digital Book</h3>
+                  <h3 className="font-medium bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">BONUS: E-book</h3>
                   <p className="text-white/70">Graham's "The Nature of Freedom" (Value: $24.99)</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-b from-[#2A2A2A] to-[#222] flex items-center justify-center flex-shrink-0 border border-white/[0.08]">
-                  <svg className="w-6 h-6 text-[#FFB347]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">Instant Access</h3>
-                  <p className="text-white/70">Start watching immediately after purchase</p>
                 </div>
               </div>
             </div>
@@ -224,13 +154,33 @@ const AllAccess: React.FC = () => {
                 />
               </div>
 
-              {clientSecret && (
-                <PaymentForm
-                  onSuccess={handlePaymentSuccess}
-                  amount={49}
-                  productName="All Access Pass"
-                />
-              )}
+              <div className="space-y-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleCheckout}
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-[#FF6B6B] to-[#FFB347] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-200 border border-white/20 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed relative"
+                >
+                  <span className={isLoading ? 'opacity-0' : ''}>
+                    Complete Purchase - $49
+                  </span>
+                  {isLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </motion.button>
+
+                {error && (
+                  <div className="bg-red-500/10 text-red-500 text-sm p-3 rounded-lg">
+                    {error}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center justify-center gap-8 mt-6">

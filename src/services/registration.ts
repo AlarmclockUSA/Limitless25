@@ -3,15 +3,18 @@ import axios from 'axios';
 interface Contact {
   email: string;
   firstName: string;
+  isPaidRegistration?: boolean;
 }
 
-// Get webhook URL from environment variables
-const WEBHOOK_URL = process.env.REACT_APP_ZAPIER_WEBHOOK_URL;
+// Get webhook URLs from environment variables
+const FREE_WEBHOOK_URL = process.env.REACT_APP_ZAPIER_WEBHOOK_URL;
+const PAID_WEBHOOK_URL = process.env.REACT_APP_PAID_REGISTRATION_WEBHOOK_URL;
 
 // Debug logging
 console.log('Environment variables:', {
-  WEBHOOK_URL,
-  RAW_ENV: process.env.REACT_APP_ZAPIER_WEBHOOK_URL
+  FREE_WEBHOOK_URL,
+  PAID_WEBHOOK_URL,
+  RAW_ENV: process.env
 });
 
 interface WebhookResponse {
@@ -22,15 +25,19 @@ interface WebhookResponse {
 }
 
 export const registerContact = async (contact: Contact) => {
-  if (!WEBHOOK_URL) {
+  const webhookUrl = contact.isPaidRegistration ? PAID_WEBHOOK_URL : FREE_WEBHOOK_URL;
+
+  if (!webhookUrl) {
     console.error('Webhook URL missing:', {
-      envVar: process.env.REACT_APP_ZAPIER_WEBHOOK_URL,
-      WEBHOOK_URL
+      isPaidRegistration: contact.isPaidRegistration,
+      FREE_WEBHOOK_URL,
+      PAID_WEBHOOK_URL
     });
-    throw new Error('REACT_APP_ZAPIER_WEBHOOK_URL is not configured in environment variables. Please check your .env file.');
+    throw new Error('Webhook URL is not configured in environment variables. Please check your .env file.');
   }
 
-  const url = `${WEBHOOK_URL}?email=${encodeURIComponent(contact.email)}&name=${encodeURIComponent(contact.firstName)}`;
+  // Construct URL with separate name and email parameters
+  const url = `${webhookUrl}?name=${encodeURIComponent(contact.firstName)}&email=${encodeURIComponent(contact.email)}`;
 
   try {
     await fetch(url, {
