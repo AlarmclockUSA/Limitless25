@@ -52,3 +52,8 @@ next-env.d.ts
 
 # Optional REPL history
 .node_repl_history
+
+# Email templates
+/email-templates
+email-templates/
+email-templates/*.md
