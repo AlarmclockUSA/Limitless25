@@ -12,27 +12,27 @@ interface Speaker {
 const speakers: Speaker[] = [
   {
     name: "Dionne van Zyl",
-    title: "Spiritual Mentor",
+    title: "Author, Business Leader & Mentor",
     image: "/images/speakers/Dionne.jpg",
-    description: "Sharing practical wisdom from her journey of discovering freedom and identity in Christ, making spiritual truths accessible for daily life."
+    description: "President of Brilliant Perspectives whose career spans from innovative tech startups to founding three impactful non-profits that have influenced generations."
   },
   {
     name: "Graham Cooke",
-    title: "Teacher & Author",
+    title: "Author, Teacher & Mentor",
     image: "/images/speakers/grahamcooke.jpg",
-    description: "Sharing from his heart and personal journey, offering insights into experiencing God's presence in everyday life."
+    description: "A global speaker passionate about empowering God's people to walk in their true identity, known for his intimate friendship with the Lord and unique way of communicating the Kingdom."
   },
   {
     name: "Jim Baker",
-    title: "Faith & Business Guide",
+    title: "Pastor, Author and Entrepreneur",
     image: "/images/speakers/Jim-Baker.webp",
     description: "Sharing experiences of bridging faith and business through practical Kingdom principles."
   },
   {
     name: "Ray Higdon",
-    title: "Community Builder",
+    title: "Author and Entrepreneur",
     image: "/images/speakers/Ray.png",
-    description: "Helping others grow through authentic relationships and practical spiritual application."
+    description: "A dynamic speaker combining spiritual growth with practical business wisdom, helping people align their purpose with their profession."
   }
 ];
 

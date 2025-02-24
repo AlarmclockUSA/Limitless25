@@ -45,28 +45,43 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-6xl xl:text-7xl font-bold mb-6 leading-[1.1] tracking-tight mx-auto"
+            className="text-5xl md:text-6xl xl:text-7xl font-bold mb-10 leading-[1.1] tracking-tight mx-auto"
           >
             Your Limitless Life<br />With God
           </motion.h1>
           
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-lg md:text-xl text-summit-gray-200 mb-6 font-medium"
-          >
-            March 7th & 8th • 10:00 AM - 11:30 AM PST
-          </motion.p>
-          
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-xl xl:text-2xl mb-10 max-w-2xl text-summit-gray-200 leading-relaxed mx-auto"
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-lg md:text-xl xl:text-2xl mb-12 max-w-2xl text-summit-gray-200 leading-relaxed mx-auto"
           >
             Join Graham Cooke, Dionne van Zyl, and special guests for a transformative online experience that will forever change how you live with God — from anywhere in the world.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mb-12"
+          >
+            <div className="inline-flex flex-col items-center">
+              <div className="bg-gradient-to-r from-[#FF6B6B]/10 to-[#FFB347]/10 backdrop-blur-sm rounded-3xl px-10 py-8 border border-white/10 shadow-2xl">
+                <p className="text-3xl md:text-4xl xl:text-5xl text-white font-bold mb-1 tracking-tight">
+                  March 7th & 8th
+                </p>
+                <div className="flex items-center justify-center gap-3 text-lg md:text-xl">
+                  <span className="text-summit-gray-200">10:00 AM - 11:30 AM</span>
+                  <span className="px-3 py-0.5 bg-white/10 rounded-full text-white/90 text-sm font-medium">PST</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-4">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FF6B6B]/60"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FFB347]/60"></div>
+              </div>
+            </div>
+          </motion.div>
 
           <div className="flex flex-col items-center gap-3">
             <motion.button
@@ -102,36 +117,22 @@ const Hero: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Speaker Avatars */}
-      <div className="relative z-20 w-full max-w-xl mx-auto px-4 md:px-6 lg:px-8 mb-10 mt-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex items-center justify-center gap-4"
-        >
-          <div className="flex -space-x-3">
-            <div className="w-12 h-12 rounded-full border-2 border-summit-white overflow-hidden">
-              <img 
-                src="/images/speakers/grahamcooke.jpg" 
-                alt="Graham Cooke"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="w-12 h-12 rounded-full border-2 border-summit-white overflow-hidden">
-              <img 
-                src="/images/speakers/dionne.jpg" 
-                alt="Dionne van Zyl"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <span className="text-summit-gray-300 text-sm">+ Special Guests</span>
-        </motion.div>
-      </div>
+      {/* Speaker Spread Image */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.9 }}
+        className="relative z-10 w-full max-w-4xl mx-auto px-4 md:px-6 lg:px-8 mt-12"
+      >
+        <img 
+          src="/images/speaker-spread.png" 
+          alt="Event Speakers"
+          className="w-full h-auto rounded-2xl shadow-2xl"
+        />
+      </motion.div>
 
       {/* Decorative bottom fade */}
-      <div className="absolute -bottom-20 left-0 right-0 h-40 bg-gradient-to-t from-summit-black via-summit-black/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-summit-black via-summit-black/50 to-transparent z-20"></div>
     </header>
   );
 };
