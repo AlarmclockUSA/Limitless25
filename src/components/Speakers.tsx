@@ -26,13 +26,7 @@ const speakers: Speaker[] = [
     name: "Jim Baker",
     title: "Pastor, Author and Entrepreneur",
     image: "/images/speakers/Jim-Baker.webp",
-    description: "Sharing experiences of bridging faith and business through practical Kingdom principles."
-  },
-  {
-    name: "Ray Higdon",
-    title: "Author and Entrepreneur",
-    image: "/images/speakers/Ray.png",
-    description: "A dynamic speaker combining spiritual growth with practical business wisdom, helping people align their purpose with their profession."
+    description: "Jim Baker and Mary, his wife of over 30 years, are the senior leaders of Zion Christian Fellowship in Powell, Ohio. The church is marked by worship, a strong presence of God, healings, miracles, several dead raisings and a passion for personal and regional transformation."
   }
 ];
 
@@ -59,7 +53,7 @@ const Speakers: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {speakers.map((speaker, index) => (
             <motion.div
               key={speaker.name}
