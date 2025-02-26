@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from './services/stripe';
@@ -27,19 +27,6 @@ export const ModalContext = createContext<ModalContextType>({
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    // Add tracking script
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "https://t.mybrilliant.app/v1/lst/universal-script?ph=2e5b64900a084ea4a2c585fdd71057b618ff67818720df62e56696dee06253f0&tag=!clicked&ref_url=" + encodeURI(document.URL);
-    document.head.appendChild(script);
-
-    // Cleanup function to remove script when component unmounts
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []); // Empty dependency array means this runs once on mount
 
   const handleSubmit = async (data: { name: string; email: string }) => {
     // The modal will be closed by the RegisterModal component after showing success state
