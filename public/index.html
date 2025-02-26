@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Hyros Tracking Script - MUST be at the top of head -->
+    <script src="https://t.mybrilliant.app/v1/lst/universal-script?ph=2e5b64900a084ea4a2c585fdd71057b618ff67818720df62e56696dee06253f0&tag=!clicked&ref_url=DYNAMICURL"></script>
+    
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/Brilliant_ICON_Full-Color 2.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -249,13 +252,17 @@
     }
     </script>
 
-    <!-- Hyros Tracking Script -->
     <script>
-      var head = document.head;
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = "https://t.mybrilliant.app/v1/lst/universal-script?ph=2e5b64900a084ea4a2c585fdd71057b618ff67818720df62e56696dee06253f0&tag=!clicked&ref_url=" + encodeURI(document.URL);
-      head.appendChild(script);
+      // Replace DYNAMICURL in Hyros script with current URL
+      document.addEventListener('DOMContentLoaded', function() {
+        var scriptTags = document.getElementsByTagName('script');
+        for (var i = 0; i < scriptTags.length; i++) {
+          if (scriptTags[i].src.includes('DYNAMICURL')) {
+            scriptTags[i].src = scriptTags[i].src.replace('DYNAMICURL', encodeURIComponent(window.location.href));
+            break;
+          }
+        }
+      });
     </script>
   </head>
   <body>
