@@ -584,4 +584,10 @@
    - Placed in the head section to track all page views
    - Will enable conversion tracking and audience building for Facebook ads
 
+4. **2024-07-31**: Added Google Tag (gtag.js) to public/index.html
+   - Implemented Google Ads conversion tracking with ID AW-16897138881
+   - Added asynchronous script loading for better performance
+   - Placed in the head section to track all page views and conversions
+   - Will enable conversion tracking and remarketing for Google Ads campaigns
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
