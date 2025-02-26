@@ -590,4 +590,10 @@
    - Placed in the head section to track all page views and conversions
    - Will enable conversion tracking and remarketing for Google Ads campaigns
 
+5. **2024-07-31**: Added Vercel Analytics to track website usage
+   - Installed @vercel/analytics package
+   - Integrated Analytics component in App.tsx
+   - Set up automatic page view tracking
+   - Will provide additional insights alongside Google and Facebook tracking
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 

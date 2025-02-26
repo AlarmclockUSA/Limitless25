@@ -2,6 +2,7 @@ import React, { useState, createContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from './services/stripe';
+import { Analytics } from '@vercel/analytics/react';
 import Home from './pages/Home';
 import ThankYou from './pages/ThankYou';
 import FinalThankYou from './pages/FinalThankYou';
@@ -55,6 +56,7 @@ function App() {
               onClose={() => setIsModalOpen(false)}
               onSubmit={handleSubmit}
             />
+            <Analytics />
           </div>
         </ModalContext.Provider>
       </BrowserRouter>
