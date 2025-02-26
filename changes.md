@@ -578,4 +578,10 @@
    - Uses encodeURI(document.URL) to properly encode the current page URL
    - Placed in the head section of the document to ensure tracking across all pages
 
+3. **2024-07-31**: Added Facebook Pixel tracking code to public/index.html
+   - Implemented standard Facebook Pixel code with tracking ID 120417822121950
+   - Added both the JavaScript and noscript versions for maximum compatibility
+   - Placed in the head section to track all page views
+   - Will enable conversion tracking and audience building for Facebook ads
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
