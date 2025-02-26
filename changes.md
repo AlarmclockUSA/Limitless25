@@ -565,4 +565,17 @@
    - Maintained existing styling and layout
    - Ensured consistent user support information
 
+## Changes Log
+
+1. **2024-07-31**: Removed Hyros tracking script from public/index.html
+   - Eliminated the entire Hyros tracking script from the head section of the document
+   - The script was previously loading from t.mybrilliant.app
+   - This was done to eliminate any issues related to the tracking functionality
+
+2. **2024-07-31**: Added updated Hyros tracking script to public/index.html
+   - Implemented new tracking script that uses document.head.appendChild method
+   - Script loads from t.mybrilliant.app with the same parameters as before
+   - Uses encodeURI(document.URL) to properly encode the current page URL
+   - Placed in the head section of the document to ensure tracking across all pages
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
