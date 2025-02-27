@@ -13,30 +13,106 @@ const AllAccess: React.FC = () => {
     email: '',
   });
 
+  // Enhanced email validation function
+  const isValidEmail = (email: string): boolean => {
+    // Simple check first
+    if (!email || email.trim() === '') return false;
+    
+    // More comprehensive regex for basic email validation
+    // This checks for a proper format with @ symbol, domain, and TLD
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) return false;
+    
+    // Additional validation checks
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    // Check for common disposable email domains
+    const disposableDomains = [
+      'tempmail.com', 'throwmail.com', 'mailinator.com', 
+      'yopmail.com', 'guerrillamail.com', 'sharklasers.com',
+      'temp-mail.org', '10minutemail.com', 'tempmail.net'
+    ];
+    
+    const domain = trimmedEmail.split('@')[1];
+    if (disposableDomains.includes(domain)) return false;
+    
+    // Check for obviously fake names in email
+    const fakePrefixes = ['test', 'fake', 'noreply', 'spam', 'aaa', 'bbb', 'xyz', '123', 'none'];
+    const prefix = trimmedEmail.split('@')[0];
+    if (fakePrefixes.some(fake => prefix === fake)) return false;
+    
+    // Check for repeated characters (more than 3)
+    if (/(.)\1{3,}/.test(trimmedEmail)) return false;
+    
+    // Reasonable minimum and maximum length
+    if (trimmedEmail.length < 5 || trimmedEmail.length > 100) return false;
+    
+    return true;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCardDetails(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    // Clear error when user starts typing
+    if (error) {
+      setError(null);
+    }
   };
 
   const handleCheckout = async () => {
     setIsLoading(true);
     setError(null);
     try {
+      // Validate inputs first
+      if (!cardDetails.name.trim()) {
+        throw new Error('Please enter your name');
+      } else if (cardDetails.name.trim().length < 2) {
+        throw new Error('Please enter your full name');
+      }
+
+      if (!cardDetails.email.trim()) {
+        throw new Error('Please enter your email address');
+      } else if (!isValidEmail(cardDetails.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      console.log('Starting checkout process...');
+      
+      // Save email to localStorage for retrieval after Stripe redirect
+      const email = cardDetails.email.trim();
+      localStorage.setItem('allAccessEmail', email);
+      localStorage.setItem('allAccessName', cardDetails.name.trim());
+      console.log('Saved customer details to localStorage for checkout completion');
+      
       // Register the contact first with separate name and email parameters
-      await registerContact({
-        firstName: cardDetails.name.trim(),
-        email: cardDetails.email.trim(),
-        isPaidRegistration: true // Add this flag to indicate it's a paid registration
-      });
+      try {
+        await registerContact({
+          firstName: cardDetails.name.trim(),
+          email: email,
+          isPaidRegistration: true // Add this flag to indicate it's a paid registration
+        });
+        console.log('Contact registration successful');
+      } catch (regError) {
+        // Log but don't block checkout if registration fails
+        console.error('Registration error:', regError);
+        // Continue with checkout even if registration fails
+      }
       
       // Redirect to Stripe Checkout
+      console.log('Redirecting to Stripe checkout...');
       await redirectToCheckout();
     } catch (err) {
       console.error('Checkout error:', err);
-      setError('Unable to proceed to checkout. Please try again.');
+      // Provide more specific error message when possible
+      if (err instanceof Error) {
+        setError(err.message || 'Unable to proceed to checkout. Please try again.');
+      } else {
+        setError('Unable to proceed to checkout. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -136,6 +212,8 @@ const AllAccess: React.FC = () => {
                   className="w-full px-4 py-3 rounded-lg bg-[#2A2A2A] border border-white/[0.08] text-white placeholder-white/40 focus:outline-none focus:border-[#FFB347]"
                   placeholder="Enter your name"
                   required
+                  autoComplete="name"
+                  aria-required="true"
                 />
               </div>
 
@@ -151,6 +229,8 @@ const AllAccess: React.FC = () => {
                   className="w-full px-4 py-3 rounded-lg bg-[#2A2A2A] border border-white/[0.08] text-white placeholder-white/40 focus:outline-none focus:border-[#FFB347]"
                   placeholder="Enter your email"
                   required
+                  autoComplete="email"
+                  aria-required="true"
                 />
               </div>
 

@@ -1,9 +1,97 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { registerContact } from '../services/registration';
 
 const AllAccessThankYou: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [webhookStatus, setWebhookStatus] = useState<'pending' | 'success' | 'error'>('pending');
+
+  useEffect(() => {
+    // Get email from URL query parameters
+    const params = new URLSearchParams(location.search);
+    let email = params.get('email') || '';
+    
+    // If email not found in URL, check localStorage
+    if (!email) {
+      const storedEmail = localStorage.getItem('allAccessEmail');
+      if (storedEmail) {
+        email = storedEmail;
+        console.log('AllAccessThankYou: Retrieved email from localStorage', { email });
+      } else {
+        console.warn('AllAccessThankYou: No email found in URL parameters or localStorage');
+      }
+    } else {
+      console.log('AllAccessThankYou: Found email in URL', { email });
+    }
+    
+    if (email) {
+      // Force tracking of the completed purchase
+      const trackPurchase = async () => {
+        try {
+          console.log('AllAccessThankYou: Sending webhook for completed purchase');
+          const result = await registerContact({
+            firstName: 'All Access Customer', // Generic name for tracking
+            email: email.trim(),
+            isPaidRegistration: true,
+            paymentCompleted: true // Flag indicating payment is complete
+          });
+          
+          console.log('AllAccessThankYou: Webhook sent successfully', result);
+          setWebhookStatus('success');
+          
+          // Send to Facebook Pixel if available
+          if (window.fbq) {
+            window.fbq('track', 'Purchase', {value: 37.00, currency: 'USD'});
+            console.log('AllAccessThankYou: Facebook Pixel purchase event fired');
+          }
+          
+          // Send to Google Analytics if available
+          if (window.gtag) {
+            window.gtag('event', 'purchase', {
+              transaction_id: new Date().getTime().toString(),
+              value: 37.00,
+              currency: 'USD',
+              items: [{
+                id: 'all-access-pass',
+                name: 'LIMITLESS All Access Pass',
+                quantity: 1,
+                price: 37.00
+              }]
+            });
+            console.log('AllAccessThankYou: Google Analytics purchase event fired');
+          }
+          
+        } catch (error) {
+          console.error('AllAccessThankYou: Error registering completed purchase:', error);
+          setWebhookStatus('error');
+          
+          // Retry once after 2 seconds
+          setTimeout(() => {
+            console.log('AllAccessThankYou: Retrying webhook...');
+            registerContact({
+              firstName: 'All Access Customer (Retry)', 
+              email: email.trim(),
+              isPaidRegistration: true,
+              paymentCompleted: true
+            }).catch(e => console.error('AllAccessThankYou: Retry also failed:', e));
+          }, 2000);
+        }
+      };
+
+      // Execute tracking immediately
+      trackPurchase();
+      
+      // Debug output to console all environment variables
+      console.log('AllAccessThankYou: Environment variables:', {
+        REACT_APP_PAID_REGISTRATION_WEBHOOK_URL: process.env.REACT_APP_PAID_REGISTRATION_WEBHOOK_URL,
+        REACT_APP_ZAPIER_WEBHOOK_URL: process.env.REACT_APP_ZAPIER_WEBHOOK_URL
+      });
+    } else {
+      console.warn('AllAccessThankYou: No email found in URL parameters or localStorage');
+    }
+  }, [location.search]);
 
   return (
     <div className="min-h-screen bg-summit-black text-summit-white py-12 md:py-20">

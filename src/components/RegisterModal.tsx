@@ -28,6 +28,43 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
     }
   }, [isOpen]);
 
+  // Enhanced email validation function
+  const isValidEmail = (email: string): boolean => {
+    // Simple check first
+    if (!email || email.trim() === '') return false;
+    
+    // More comprehensive regex for basic email validation
+    // This checks for a proper format with @ symbol, domain, and TLD
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) return false;
+    
+    // Additional validation checks
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    // Check for common disposable email domains
+    const disposableDomains = [
+      'tempmail.com', 'throwmail.com', 'mailinator.com', 
+      'yopmail.com', 'guerrillamail.com', 'sharklasers.com',
+      'temp-mail.org', '10minutemail.com', 'tempmail.net'
+    ];
+    
+    const domain = trimmedEmail.split('@')[1];
+    if (disposableDomains.includes(domain)) return false;
+    
+    // Check for obviously fake names in email
+    const fakePrefixes = ['test', 'fake', 'noreply', 'spam', 'aaa', 'bbb', 'xyz', '123', 'none'];
+    const prefix = trimmedEmail.split('@')[0];
+    if (fakePrefixes.some(fake => prefix === fake)) return false;
+    
+    // Check for repeated characters (more than 3)
+    if (/(.)\1{3,}/.test(trimmedEmail)) return false;
+    
+    // Reasonable minimum and maximum length
+    if (trimmedEmail.length < 5 || trimmedEmail.length > 100) return false;
+    
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -40,12 +77,16 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
     if (!name.trim()) {
       setErrors(prev => ({ ...prev, name: 'Name is required' }));
       hasErrors = true;
+    } else if (name.trim().length < 2) {
+      setErrors(prev => ({ ...prev, name: 'Please enter your full name' }));
+      hasErrors = true;
     }
+    
     if (!email.trim()) {
       setErrors(prev => ({ ...prev, email: 'Email is required' }));
       hasErrors = true;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setErrors(prev => ({ ...prev, email: 'Please enter a valid email' }));
+    } else if (!isValidEmail(email)) {
+      setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
       hasErrors = true;
     }
 
@@ -85,6 +126,17 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
       }
     } else {
       setIsLoading(false);
+    }
+  };
+
+  // Real-time email validation as user types
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    
+    // Clear error when user starts typing again
+    if (errors.email) {
+      setErrors(prev => ({ ...prev, email: '' }));
     }
   };
 
@@ -161,6 +213,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
                 } focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
                 placeholder="Enter your name"
                 disabled={isLoading}
+                required
+                aria-required="true"
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-500">
@@ -177,12 +231,15 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSubmit
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 className={`w-full px-4 py-2 sm:py-3 rounded-lg border ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 } focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
                 placeholder="Enter your email"
                 disabled={isLoading}
+                autoComplete="email"
+                required
+                aria-required="true"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-500">

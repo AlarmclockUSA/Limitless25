@@ -14,25 +14,43 @@ export const getStripe = () => {
 };
 
 export const redirectToCheckout = async () => {
-  const stripe = await getStripe();
-  if (!stripe) throw new Error('Stripe failed to load');
+  console.log('[Stripe Service] Initializing checkout process...');
+  
+  try {
+    const stripe = await getStripe();
+    if (!stripe) {
+      console.error('[Stripe Service] Stripe failed to load');
+      throw new Error('Payment provider failed to load. Please refresh and try again.');
+    }
 
-  const { search } = window.location;
-  const params = new URLSearchParams(search);
-  const email = params.get('email');
+    const priceId = process.env.REACT_APP_STRIPE_PRICE_ID;
+    if (!priceId) {
+      console.error('[Stripe Service] Price ID missing from environment variables');
+      throw new Error('Payment configuration is incomplete. Please contact support.');
+    }
 
-  const priceId = process.env.REACT_APP_STRIPE_PRICE_ID;
-  if (!priceId) throw new Error('Stripe price ID not configured');
+    console.log('[Stripe Service] Redirecting to Stripe checkout with:', { 
+      priceId,
+      successUrl: `${window.location.origin}/all-access/thank-you`,
+      cancelUrl: `${window.location.origin}/all-access`
+    });
 
-  const { error } = await stripe.redirectToCheckout({
-    lineItems: [{ price: priceId, quantity: 1 }],
-    mode: 'payment',
-    successUrl: `${window.location.origin}/all-access/thank-you?email=${email || ''}`,
-    cancelUrl: `${window.location.origin}/all-access`,
-    customerEmail: email || undefined,
-  });
+    const { error } = await stripe.redirectToCheckout({
+      lineItems: [{ price: priceId, quantity: 1 }],
+      mode: 'payment',
+      successUrl: `${window.location.origin}/all-access/thank-you`,
+      cancelUrl: `${window.location.origin}/all-access`,
+      customerEmail: localStorage.getItem('allAccessEmail') || undefined,
+    });
 
-  if (error) throw error;
+    if (error) {
+      console.error('[Stripe Service] Checkout error:', error);
+      throw error;
+    }
+  } catch (err) {
+    console.error('[Stripe Service] Unexpected error in checkout process:', err);
+    throw err;
+  }
 };
 
 interface CreatePaymentIntentResponse {
