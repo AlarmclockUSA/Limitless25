@@ -76,7 +76,29 @@ const FinalThankYou: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Next Steps</h3>
-                  <p className="text-summit-gray-300">Add the event to your calendar and join our exclusive community on Discord</p>
+                  <p className="text-summit-gray-300">Add the event to your calendar to ensure you don't miss this transformative experience</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-summit-gray-200" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Join Our Facebook Community</h3>
+                  <p className="text-summit-gray-300 mb-2">
+                    On this community you'll get access to exclusive bonuses and live sessions in the run up to the event.
+                  </p>
+                  <a 
+                    href="https://www.facebook.com/groups/2869201223280676"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                  >
+                    Join Community
+                  </a>
                 </div>
               </div>
             </div>

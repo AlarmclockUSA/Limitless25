@@ -596,4 +596,17 @@
    - Set up automatic page view tracking
    - Will provide additional insights alongside Google and Facebook tracking
 
+6. **2024-07-31**: Added Facebook Community Link to Thank You Pages
+   - Added link to Facebook group (https://www.facebook.com/groups/2869201223280676)
+   - Included description about exclusive bonuses and live sessions
+   - Added Facebook icon and styled "Join Community" button
+   - Implemented in both ThankYou.tsx and FinalThankYou.tsx components for better user engagement
+   - Maintained consistent styling with each page's design language
+
+7. **2024-07-31**: Removed Discord Reference from Final Thank You Page
+   - Updated the "Next Steps" section text to focus only on adding the event to the calendar
+   - Removed mention of Discord community
+   - Changed to emphasize the importance of not missing the event
+   - This change ensures consistency with the Facebook community focus
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
