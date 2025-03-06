@@ -18,8 +18,8 @@ const ThankYou: React.FC = () => {
   const eventDetails = {
     title: "LIMITLESS - Live Limitlessly With God",
     description: "Join Graham Cooke and Dionne van Zyl for this transformative virtual event. Experience practical insights for living in God's presence daily.",
-    startDate: new Date('2024-03-07T18:00:00.000Z'), // 10:00 AM PST
-    endDate: new Date('2024-03-07T19:30:00.000Z'), // 11:30 AM PST
+    startDate: new Date('2025-03-07T18:00:00.000Z'), // 10:00 AM PST
+    endDate: new Date('2025-03-07T19:30:00.000Z'), // 11:30 AM PST
     location: "Online Virtual Event"
   };
 

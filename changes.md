@@ -656,4 +656,10 @@
     - Improved user experience with clear visual indicators for required fields
     - Ensured consistent required field behavior across all registration forms
 
+12. **2024-08-01**: Updated Calendar Dates for 2025
+    - Updated event dates in the ThankYou page from 2024 to 2025
+    - Ensured calendar links and downloads reflect the correct 2025 event dates
+    - Fixed the "Add to Calendar" functionality to use the updated dates
+    - Maintained consistent date formatting across all calendar integrations
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
