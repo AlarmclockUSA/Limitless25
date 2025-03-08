@@ -1,14 +1,9 @@
-import React, { useState, createContext } from 'react';
+import React, { createContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from './services/stripe';
 import { Analytics } from '@vercel/analytics/react';
-import Home from './pages/Home';
-import ThankYou from './pages/ThankYou';
-import FinalThankYou from './pages/FinalThankYou';
-import AllAccess from './pages/AllAccess';
-import AllAccessThankYou from './pages/AllAccessThankYou';
-import RegisterModal from './components/RegisterModal';
+import RedirectPage from './components/RedirectPage';
 import './App.css';
 
 // Debug - remove after fixing
@@ -27,15 +22,9 @@ export const ModalContext = createContext<ModalContextType>({
 });
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = async (data: { name: string; email: string }) => {
-    // The modal will be closed by the RegisterModal component after showing success state
-    return true;
-  };
-
+  // Create a simplified context value since we're just redirecting
   const modalContextValue = {
-    openModal: () => setIsModalOpen(true)
+    openModal: () => console.log('Modal functionality disabled during redirect')
   };
 
   return (
@@ -44,18 +33,9 @@ function App() {
         <ModalContext.Provider value={modalContextValue}>
           <div className="app-container bg-summit-black">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/thank-you" element={<ThankYou />} />
-              <Route path="/final-thank-you" element={<FinalThankYou />} />
-              <Route path="/all-access" element={<AllAccess />} />
-              <Route path="/all-access/thank-you" element={<AllAccessThankYou />} />
+              {/* Redirect all routes to the RedirectPage */}
+              <Route path="*" element={<RedirectPage />} />
             </Routes>
-            
-            <RegisterModal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              onSubmit={handleSubmit}
-            />
             <Analytics />
           </div>
         </ModalContext.Provider>

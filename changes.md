@@ -662,4 +662,12 @@
     - Fixed the "Add to Calendar" functionality to use the updated dates
     - Maintained consistent date formatting across all calendar integrations
 
+13. **2024-08-01**: Implemented Site Redirect to brilliance25.com
+    - Created RedirectPage component with automatic redirect functionality
+    - Updated App.tsx to use RedirectPage for all routes
+    - Set 3-second delay with loading animation before redirect
+    - Added clear messaging that "Limitless is over, join us for our next event Brilliance25"
+    - Redirects all traffic to brilliance25.com/?el=limitlessredirect for tracking
+    - Fixed ESLint warnings by removing unused variables in App.tsx
+
 Note: All changes will be logged here in chronological order with descriptions and reasons for changes. 
